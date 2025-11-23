@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -12,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('reseps', function (Blueprint $table) {
+        Schema::create('reseps', function (Blueprint $table) {
         $table->id();
-        $table->string('judul');
-        $table->text('bahan');
-        $table->text('langkah');
-        $table->string('gambar')->nullable();
+        $table->string('nama');
+        $table->string('kategori')->nullable();
+        $table->string('gambar'); // disimpan di storage/images
+        $table->text('bahan'); // dipisah pakai enter
+        $table->text('cara_masak'); // dipisah pakai enter
         $table->timestamps();
     });
+
     }
 
     /**
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('event');
+        Schema::dropIfExists('reseps');
     }
 };

@@ -10,9 +10,10 @@ class Resep extends Model
     use HasFactory;
 
     protected $fillable = [
-        'judul',
-        'bahan',
-        'langkah',
+        'nama',
+        'kategori',
         'gambar',
+        'bahan',
+        'cara_masak'
     ];
 }
