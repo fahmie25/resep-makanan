@@ -25,11 +25,24 @@
         color: #7a0000;
         margin-bottom: 10px;
         line-height: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 18px;
     }
 
     .judul-resep span {
         font-size: 50px;
         margin-left: 10px;
+    }
+
+    .favorite-btn {
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 40px;
+        color: #b30000;
+        line-height: 1;
+        padding: 0;
     }
 
     .detail-content {
@@ -65,9 +78,27 @@
 
     <a href="{{ route('reseps.index') }}" class="back-btn">←</a>
 
+    @php
+        // cek apakah user sudah login dan sudah mem-favorite resep ini
+        $isFavorite = auth()->check()
+            && auth()->user()->favoriteReseps->contains($resep->id);
+    @endphp
+
     <h1 class="judul-resep">
-        {{ $resep->nama }} 
+        {{ $resep->nama }}
         <span>{{ $resep->kategori }}</span>
+
+        {{-- tombol favorite --}}
+        @auth
+            <form action="{{ route('favorites.toggle', $resep->id) }}"
+                  method="POST"
+                  style="display:inline;">
+                @csrf
+                <button type="submit" class="favorite-btn">
+                    {!! $isFavorite ? '★' : '☆' !!}
+                </button>
+            </form>
+        @endauth
     </h1>
 
     <div class="detail-content">
@@ -80,7 +111,9 @@
             <h2>Bahan-bahan :</h2>
             <ul>
                 @foreach(explode("\n", $resep->bahan) as $b)
-                    <li>{{ $b }}</li>
+                    @if(trim($b) !== '')
+                        <li>{{ $b }}</li>
+                    @endif
                 @endforeach
             </ul>
         </div>
@@ -89,7 +122,9 @@
             <h2>Cara Pembuatan :</h2>
             <ol>
                 @foreach(explode("\n", $resep->cara_masak) as $step)
-                    <li>{{ $step }}</li>
+                    @if(trim($step) !== '')
+                        <li>{{ $step }}</li>
+                    @endif
                 @endforeach
             </ol>
         </div>
