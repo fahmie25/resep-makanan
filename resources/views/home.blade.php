@@ -174,10 +174,21 @@
             ⬆ <span>Upload</span>
         </a>
 
-        {{-- LOGIN --}}
-        <a href="{{ route('login') }}" class="btn-login">
-            Login ⤴
-        </a>
+         @guest
+            {{-- Jika belum login --}}
+            <a href="{{ route('login') }}" class="btn-login">Login ⇗</a>
+        @endguest
+
+        @auth
+            {{-- Jika sudah login --}}
+            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn-login" 
+                    style="background:#B3261E; color:white; border:1px solid #000; cursor:pointer;">
+                    Logout ⇘
+                </button>
+            </form>
+        @endauth
     </div>
 </header>
 
