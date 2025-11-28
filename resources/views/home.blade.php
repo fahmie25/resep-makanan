@@ -67,7 +67,7 @@
             font-weight: 600;
         }
 
-        /* Tombol Login */
+        /* Tombol Login / Logout */
         .btn-login {
             padding: 10px 22px;
             border-radius: 4px;
@@ -79,7 +79,8 @@
             cursor: pointer;
         }
 
-        /* SEARCH */
+        /* ========== SEARCH ========== */
+
         .search-wrapper {
             width: 65%;
             margin: 10px auto 20px auto;
@@ -96,6 +97,10 @@
             font-size: 18px;
         }
 
+        .search-icon {
+            margin-right: 10px;
+        }
+
         .search-input {
             border: none;
             outline: none;
@@ -109,7 +114,8 @@
             margin: 8px 0 0 0;
         }
 
-        /* RESEP POPULER */
+        /* ========== RESEP POPULER ========== */
+
         .section-title {
             font-family: 'Playfair Display', serif;
             text-align: center;
@@ -146,7 +152,6 @@
             margin-top: 10px;
             font-size: 20px;
         }
-
     </style>
 </head>
 <body>
@@ -163,28 +168,27 @@
     </div>
 
     <div class="actions">
-
         {{-- ⭐ Favorite (ikon + teks bisa diklik) --}}
         <a href="{{ route('favorites.index') }}" class="nav-link">
             ⭐ <span>Favorite</span>
         </a>
 
-        {{-- ⬆ Upload (nanti bisa diganti route upload) --}}
+        {{-- ⬆ Upload (nanti bisa diganti route upload beneran) --}}
         <a href="#" class="nav-link">
             ⬆ <span>Upload</span>
         </a>
 
-         @guest
-            {{-- Jika belum login --}}
+        @guest
+            {{-- Kalau belum login, tampilkan tombol Login --}}
             <a href="{{ route('login') }}" class="btn-login">Login ⇗</a>
         @endguest
 
         @auth
-            {{-- Jika sudah login --}}
+            {{-- Kalau sudah login, tampilkan tombol Logout --}}
             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                 @csrf
-                <button type="submit" class="btn-login" 
-                    style="background:#B3261E; color:white; border:1px solid #000; cursor:pointer;">
+                <button type="submit" class="btn-login"
+                        style="background:#B3261E; color:white; border:1px solid #000;">
                     Logout ⇘
                 </button>
             </form>
@@ -192,47 +196,88 @@
     </div>
 </header>
 
+{{-- FORM SEARCH --}}
 <div class="search-wrapper">
-    <div class="search-box">
-        <span>🔍</span>
-        <input class="search-input" type="text" placeholder="Cari Resep Disini">
-    </div>
+    <form class="search-box" action="{{ route('home') }}" method="GET">
+        <span class="search-icon">🔍</span>
+        <input
+            class="search-input"
+            type="text"
+            name="q"
+            placeholder="Cari Resep Disini"
+            value="{{ $search ?? '' }}">
+    </form>
     <div class="divider"></div>
 </div>
 
 <h2 class="section-title">Resep Populer</h2>
 
-<div class="recipes">
+{{-- Kalau ADA kata kunci pencarian --}}
+@if(isset($search) && $search !== null && $search !== '')
 
-    <a href="{{ route('resep.rendang') }}" style="text-decoration:none; color:inherit;">
-        <div class="card">
-            <img src="{{ asset('storage/images/rendang.jpg') }}" alt="Rendang Padang">
-            <div class="card-title">Rendang<br>Padang</div>
+    {{-- Tapi TIDAK ada hasil --}}
+    @if($reseps->isEmpty())
+        <p style="text-align:center; margin-top:20px;">
+            Tidak ditemukan resep untuk kata kunci yang diminta.
+        </p>
+    @else
+        {{-- Ada hasil pencarian, tampilkan dari database --}}
+        <div class="recipes">
+            @foreach($reseps as $resep)
+                <a href="{{ route('resep.show', $resep->id) }}"
+                   style="text-decoration:none; color:inherit;">
+                    <div class="card">
+                        <img src="{{ asset('storage/' . $resep->gambar) }}"
+                             alt="{{ $resep->nama }}">
+                        <div class="card-title">{{ $resep->nama }}</div>
+                    </div>
+                </a>
+            @endforeach
         </div>
-    </a>
+    @endif
 
-    <a href="{{ route('resep.gudeg') }}" style="text-decoration:none; color:inherit;">
-        <div class="card">
-            <img src="{{ asset('storage/images/gudeg.jpg') }}" alt="Gudeg Jogja">
-            <div class="card-title">Gudeg<br>Jogja</div>
-        </div>
-    </a>
+{{-- Kalau TIDAK sedang search => tampilkan 4 menu populer bawaan --}}
+@else
+    <div class="recipes">
 
-    <a href="{{ route('resep.sate') }}" style="text-decoration:none; color:inherit;">
-        <div class="card">
-            <img src="{{ asset('storage/images/sate madura.jpg') }}" alt="Sate Madura">
-            <div class="card-title">Sate<br>Madura</div>
-        </div>
-    </a>
+        <a href="{{ route('resep.rendang') }}"
+           style="text-decoration:none; color:inherit;">
+            <div class="card">
+                <img src="{{ asset('storage/images/rendang.jpg') }}"
+                     alt="Rendang Padang">
+                <div class="card-title">Rendang<br>Padang</div>
+            </div>
+        </a>
 
-    <a href="{{ route('kerak-telor') }}" style="text-decoration:none; color:inherit;">
-        <div class="card">
-            <img src="{{ asset('storage/images/kerak telor.jpg') }}" alt="Kerak Telor Jakarta">
-            <div class="card-title">Kerak Telor<br>Jakarta</div>
-        </div>
-    </a>
+        <a href="{{ route('resep.gudeg') }}"
+           style="text-decoration:none; color:inherit;">
+            <div class="card">
+                <img src="{{ asset('storage/images/gudeg.jpg') }}"
+                     alt="Gudeg Jogja">
+                <div class="card-title">Gudeg<br>Jogja</div>
+            </div>
+        </a>
 
-</div>
+        <a href="{{ route('resep.sate') }}"
+           style="text-decoration:none; color:inherit;">
+            <div class="card">
+                <img src="{{ asset('storage/images/sate madura.jpg') }}"
+                     alt="Sate Madura">
+                <div class="card-title">Sate<br>Madura</div>
+            </div>
+        </a>
+
+        <a href="{{ route('kerak-telor') }}"
+           style="text-decoration:none; color:inherit;">
+            <div class="card">
+                <img src="{{ asset('storage/images/kerak telor.jpg') }}"
+                     alt="Kerak Telor Jakarta">
+                <div class="card-title">Kerak Telor<br>Jakarta</div>
+            </div>
+        </a>
+
+    </div>
+@endif
 
 </body>
 </html>

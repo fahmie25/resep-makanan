@@ -42,4 +42,25 @@ class ResepController extends Controller
     {
         //
     }
+
+    public function home(Request $request)
+    {
+        $search = $request->input('q');   // nama field dari input search
+
+        $query = Resep::query();
+
+        $reseps = collect();
+
+         if ($search) {
+            $reseps = Resep::where('nama', 'like', '%' . $search . '%')
+                ->orWhere('kategori', 'like', '%' . $search . '%')
+                ->get();
+            }  
+
+        return view('home', [
+            'reseps' => $reseps,
+            'search' => $search,
+        ]);
+    }
+
 }
