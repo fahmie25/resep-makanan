@@ -8,93 +8,120 @@
         font-family: 'Nunito', sans-serif;
     }
 
-    .detail-container {
-        padding: 40px 70px;
+    .detail-wrapper {
+        width: 90%;
+        max-width: 1400px;
+        margin: 40px auto;
+        display: grid;
+        grid-template-columns: 1.1fr 1.3fr;
+        gap: 50px;
     }
 
-    .judul-resep {
+    /* JUDUL UTAMA */
+    .judul-besar {
         font-family: 'Playfair Display', serif;
-        font-size: 68px;
+        font-size: 95px;
         font-weight: 700;
         color: #B3261E;
-        margin: 0 0 20px 0;
-        line-height: 1.1;
+        line-height: 0.8;
     }
 
-    .detail-content {
-        display: grid;
-        grid-template-columns: 1.1fr 1.4fr;
-        gap: 40px;
-        align-items: flex-start;
-        margin-top: 10px;
+    /* SUB JUDUL */
+    .judul-kecil {
+        font-family: 'Playfair Display', serif;
+        font-size: 48px;
+        color: #B3261E;
+        margin-left: 20px;
+        margin-top: -15px;
     }
 
-    .gambar-resep img {
+    /* STAR FAVORITE DI POJOK */
+    .fav-wrapper {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+    }
+
+    /* KOLOM KIRI */
+    .kolom-kiri img {
         width: 100%;
-        max-width: 430px;
-        border-radius: 18px;
+        max-width: 420px;
+        border-radius: 20px;
         display: block;
+        margin-bottom: 20px;
     }
 
-    .bahan, .cara {
-        margin-top: 20px;
-    }
-
-    .bahan h2, .cara h2 {
+    .sub-title {
         font-family: 'Playfair Display', serif;
         font-size: 28px;
         color: #B3261E;
-        margin-bottom: 10px;
+        margin: 10px 0;
     }
 
     ul, ol {
-        padding-left: 20px;
-        font-size: 16px;
-        line-height: 1.6;
-        margin-top: 0;
+        font-size: 17px;
+        line-height: 1.7;
     }
+
 </style>
 
-<div class="detail-container">
 
-    {{-- JUDUL DI ATAS, TANPA TOMBOL BACK --}}
-    <h1 class="judul-resep">
-        {{ $resep->nama }}
-    </h1>
+{{-- WRAPPER JUDUL ATAS --}}
+<div style="position: relative; width: 90%; max-width:1400px; margin:auto;">
 
-    <div class="detail-content">
+    {{-- TOMBOL FAVORITE --}}
+    <div class="fav-wrapper">
+        <x-favorite-star :resep="$resep" />
+    </div>
 
-        {{-- KOLOM KIRI: FOTO + BAHAN --}}
-        <div>
-            <div class="gambar-resep">
-                <img src="{{ asset('storage/' . $resep->gambar) }}" alt="{{ $resep->nama }}">
-            </div>
+    {{-- JUDUL SEPERTI FIGMA --}}
+    <div class="judul-besar">{{ explode(' ', $resep->nama)[0] }}</div>
+    <div class="judul-kecil">
+        {{ implode(' ', array_slice(explode(' ', $resep->nama), 1)) }}
+    </div>
+</div>
 
-            <div class="bahan">
-                <h2>Bahan-bahan :</h2>
-                <ul>
-                    @foreach(explode("\n", $resep->bahan) as $b)
-                        @if(trim($b) !== '')
-                            <li>{{ $b }}</li>
-                        @endif
-                    @endforeach
-                </ul>
-            </div>
-        </div>
 
-        {{-- KOLOM KANAN: CARA PEMBUATAN --}}
-        <div class="cara">
-            <h2>Cara Pembuatan :</h2>
-            <ol>
-                @foreach(explode("\n", $resep->cara_masak) as $step)
-                    @if(trim($step) !== '')
-                        <li>{{ $step }}</li>
-                    @endif
-                @endforeach
-            </ol>
-        </div>
+
+{{-- MAIN CONTENT --}}
+<div class="detail-wrapper">
+
+    {{-- KOLOM KIRI = GAMBAR + BAHAN --}}
+    <div class="kolom-kiri">
+
+        {{-- GAMBAR --}}
+        <img src="{{ asset('storage/' . $resep->gambar) }}" alt="{{ $resep->nama }}">
+
+        {{-- BAHAN --}}
+        <div class="sub-title">Bahan-bahan :</div>
+
+        <ul>
+            @foreach(explode("\n", $resep->bahan) as $bahan)
+                @if(trim($bahan) !== '')
+                    <li>{{ $bahan }}</li>
+                @endif
+            @endforeach
+        </ul>
 
     </div>
+
+
+
+    {{-- KOLOM KANAN = CARA PEMBUATAN --}}
+    <div>
+
+        <div class="sub-title" style="text-align:center;">Cara Pembuatan :</div>
+
+        <ol>
+            @foreach(explode("\n", $resep->cara_masak) as $step)
+                @if(trim($step) !== '')
+                    <li style="margin-bottom: 8px;">{{ $step }}</li>
+                @endif
+            @endforeach
+        </ol>
+
+    </div>
+
 </div>
 
 @endsection

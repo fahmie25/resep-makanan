@@ -56,7 +56,6 @@
             font-size: 18px;
         }
 
-        /* Link Favorite dan Upload */
         .nav-link {
             display: inline-flex;
             align-items: center;
@@ -67,7 +66,6 @@
             font-weight: 600;
         }
 
-        /* Tombol Login / Logout */
         .btn-login {
             padding: 10px 22px;
             border-radius: 4px;
@@ -97,9 +95,7 @@
             font-size: 18px;
         }
 
-        .search-icon {
-            margin-right: 10px;
-        }
+        .search-icon { margin-right: 10px; }
 
         .search-input {
             border: none;
@@ -138,6 +134,7 @@
             border-radius: 24px;
             padding: 12px;
             text-align: center;
+            position: relative;
         }
 
         .card img {
@@ -152,8 +149,20 @@
             margin-top: 10px;
             font-size: 20px;
         }
+
+        /* Tombol favorit posisi pojok */
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: 26px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
 
 <header>
@@ -168,31 +177,39 @@
     </div>
 
     <div class="actions">
-        {{-- ⭐ Favorite (ikon + teks bisa diklik) --}}
+
         <a href="{{ route('favorites.index') }}" class="nav-link">
             ⭐ <span>Favorite</span>
         </a>
 
-        {{-- ⬆ Upload (nanti bisa diganti route upload beneran) --}}
-        <a href="#" class="nav-link">
-            ⬆ <span>Upload</span>
-        </a>
+        @auth
+    <a href="{{ route('upload.resep') }}" class="nav-link">
+        ⬆ <span>Upload</span>
+    </a>
+    @endauth
+
+    @guest
+    <a href="{{ route('login') }}" class="nav-link">
+        ⬆ <span>Upload</span>
+    </a>
+    @endguest
+
 
         @guest
-            {{-- Kalau belum login, tampilkan tombol Login --}}
             <a href="{{ route('login') }}" class="btn-login">Login ⇗</a>
         @endguest
 
         @auth
-            {{-- Kalau sudah login, tampilkan tombol Logout --}}
-            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                @csrf
-                <button type="submit" class="btn-login"
-                        style="background:#B3261E; color:white; border:1px solid #000;">
-                    Logout ⇘
-                </button>
-            </form>
-        @endauth
+        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit"
+                class="btn-login"
+                style="background:#B3261E; color:white; border:1px solid #000;">
+                Logout ⇘
+            </button>
+        </form>
+    @endauth
+
     </div>
 </header>
 
@@ -212,72 +229,27 @@
 
 <h2 class="section-title">Resep Populer</h2>
 
-{{-- Kalau ADA kata kunci pencarian --}}
-@if(isset($search) && $search !== null && $search !== '')
+<div class="recipes">
 
-    {{-- Tapi TIDAK ada hasil --}}
-    @if($reseps->isEmpty())
-        <p style="text-align:center; margin-top:20px;">
-            Tidak ditemukan resep untuk kata kunci yang diminta.
-        </p>
-    @else
-        {{-- Ada hasil pencarian, tampilkan dari database --}}
-        <div class="recipes">
-            @foreach($reseps as $resep)
-                <a href="{{ route('resep.show', $resep->id) }}"
-                   style="text-decoration:none; color:inherit;">
-                    <div class="card">
-                        <img src="{{ asset('storage/' . $resep->gambar) }}"
-                             alt="{{ $resep->nama }}">
-                        <div class="card-title">{{ $resep->nama }}</div>
-                    </div>
-                </a>
-            @endforeach
+    {{-- LOOP DINAMIS DARI DATABASE --}}
+    @foreach($reseps as $resep)
+
+        <div class="card">
+
+            <!-- {{-- Tombol Favorit ⭐ --}}
+            <x-favorite-star :resep="$resep" class="fav-btn" /> -->
+
+            {{-- Klik gambar menuju detail --}}
+            <a href="{{ route('resep.show', $resep->id) }}" style="text-decoration:none; color:inherit;">
+                <img src="{{ asset('storage/' . $resep->gambar) }}" alt="{{ $resep->nama }}">
+                <div class="card-title">{{ $resep->nama }}</div>
+            </a>
+
         </div>
-    @endif
 
-{{-- Kalau TIDAK sedang search => tampilkan 4 menu populer bawaan --}}
-@else
-    <div class="recipes">
+    @endforeach
 
-        <a href="{{ route('resep.rendang') }}"
-           style="text-decoration:none; color:inherit;">
-            <div class="card">
-                <img src="{{ asset('storage/images/rendang.jpg') }}"
-                     alt="Rendang Padang">
-                <div class="card-title">Rendang<br>Padang</div>
-            </div>
-        </a>
-
-        <a href="{{ route('resep.gudeg') }}"
-           style="text-decoration:none; color:inherit;">
-            <div class="card">
-                <img src="{{ asset('storage/images/gudeg.jpg') }}"
-                     alt="Gudeg Jogja">
-                <div class="card-title">Gudeg<br>Jogja</div>
-            </div>
-        </a>
-
-        <a href="{{ route('resep.sate') }}"
-           style="text-decoration:none; color:inherit;">
-            <div class="card">
-                <img src="{{ asset('storage/images/sate madura.jpg') }}"
-                     alt="Sate Madura">
-                <div class="card-title">Sate<br>Madura</div>
-            </div>
-        </a>
-
-        <a href="{{ route('kerak-telor') }}"
-           style="text-decoration:none; color:inherit;">
-            <div class="card">
-                <img src="{{ asset('storage/images/kerak telor.jpg') }}"
-                     alt="Kerak Telor Jakarta">
-                <div class="card-title">Kerak Telor<br>Jakarta</div>
-            </div>
-        </a>
-
-    </div>
-@endif
+</div>
 
 </body>
 </html>

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResepController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\Admin\ResepAdminController;
+// use App\Http\Controllers\UserUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,25 +51,24 @@ Route::get('/resep/{id}', [ResepController::class, 'show'])->name('resep.show');
 | AUTH: LOGIN, LOGOUT, REGISTER, GOOGLE LOGIN
 |--------------------------------------------------------------------------
 */
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// halaman pilihan daftar
-Route::get('/register-choice', [AuthController::class, 'showRegisterChoice'])
-    ->name('register.choice');
-
-// register via email
-Route::get('/register-email', [AuthController::class, 'showRegisterForm'])
-    ->name('register.email');
-Route::post('/register-email', [AuthController::class, 'register'])
-    ->name('register.email.post');
-
-// GOOGLE LOGIN
-Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect'])
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::get('/register-choice', [AuthController::class, 'showRegisterChoice'])->name('register.choice');
+    Route::get('/register-email', [AuthController::class, 'showRegisterForm'])->name('register.email');
+    Route::post('/register-email', [AuthController::class, 'register'])->name('register.email.post');
+    Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect'])
     ->name('google.redirect');
-Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])
+    Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])
     ->name('google.callback');
+});
+
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+// hanya user yang login boleh logout
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
 
 
 /*
@@ -84,3 +85,33 @@ Route::get('/favorites', [FavoriteController::class, 'index'])
 // boleh GET & POST supaya kalau ke-refresh / dibuka dari URL tidak 404
 Route::match(['get', 'post'], '/reseps/{resep}/favorite', [FavoriteController::class, 'toggle'])
     ->name('reseps.favorite');
+
+// GOOGLE LOGIN — harus ADA sebelum middleware group
+// Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect'])
+//     ->name('google.redirect');
+
+// Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])
+//     ->name('google.callback');
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/', [ResepAdminController::class, 'index'])->name('dashboard');
+
+        Route::resource('resep', ResepAdminController::class);
+    });
+
+Route::middleware('auth')->group(function () {
+
+    // halaman form upload resep
+    Route::get('/upload-resep', [ResepController::class, 'createUser'])
+        ->name('upload.resep');
+
+    // proses upload resep user
+    Route::post('/upload-resep', [ResepController::class, 'storeUser'])
+        ->name('upload.resep.store');
+
+    });
+

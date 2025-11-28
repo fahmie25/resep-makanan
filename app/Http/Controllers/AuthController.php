@@ -23,30 +23,45 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-        $credentials = $request->only('email', 'password');
+    // dd($request->only('email', 'password'));
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/');
+
+    // ambil email & password
+    $credentials = $request->only('email', 'password');
+
+    // cek login
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+
+        // jika admin → arahkan dashboard admin
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
         }
 
-        return back()->with('status', 'Email atau Password salah!');
+        // jika user biasa → arahkan home
+        return redirect()->route('home');
     }
+
+    // gagal login
+    return back()->with('status', 'Email atau Password salah!');
+}
 
     /**
      * Logout
      */
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('home'); // ← kembali ke home
     }
 
     /**
@@ -122,5 +137,16 @@ class AuthController extends Controller
         Auth::login($user);
         return redirect()->route('home');
     }
+
+    protected function authenticated(Request $request, $user)
+    {
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('home'); // user biasa
+    }
+
+
 }
 
