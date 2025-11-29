@@ -13,89 +13,127 @@
             font-family: 'Nunito', sans-serif;
         }
 
-        .container {
-            display: flex;
-            height: 100vh;
-            align-items: center;
-            justify-content: space-between;
-            padding: 40px;
-        }
-
-        .left img {
-            width: 430px;
-        }
-
-        .right {
-            width: 45%;
-            text-align: center;
-        }
-
-        .logo img {
-            width: 140px;
-        }
-
-        h2 {
-            font-size: 28px;
-            margin: 20px 0;
+        /* BACK BUTTON */
+        .back {
+            position: absolute;
+            top: 28px;
+            left: 28px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background-color: #ffffff;
+            border: 1px solid #f0d9c7;
             color: #B3261E;
-            font-family: 'Playfair Display', serif;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
         }
 
-        .btn {
+        .back:hover {
+            background: #fbeee5;
+        }
+
+        /* WRAPPER SAMA SEPERTI LOGIN */
+        .auth-wrapper {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 320px;
-            margin: 10px auto;
-            padding: 12px;
-            border-radius: 40px;
-            background: #fff;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            font-size: 16px;
         }
 
-        .btn img {
-            width: 22px;
-            margin-right: 10px;
+        .auth-box {
+            text-align: center;
         }
 
-        .back {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 20px;
+        .auth-logo img {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        .auth-title {
+            font-size: 28px;
             color: #B3261E;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 32px;
+        }
+
+        .auth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 360px;
+            padding: 13px 5px;
+            margin: 10px auto;
+            border-radius: 45px;
+            background: #ffffff;
+            border: 1px solid #e1c9b3;
             text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        .auth-btn:hover {
+            background-color: #f8efe7;
+        }
+
+        .btn-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .btn-icon-email svg {
+            width: 22px;
+            height: 22px;
         }
     </style>
 </head>
 
 <body>
 
-    <a href="{{ route('login') }}" class="back">←</a>
+    <!-- tombol kembali -->
+    <a href="{{ route('login') }}" class="back">← Kembali</a>
 
-    <div class="container">
-        <div class="left">
-            <img src="{{ asset('storage/images/register-illustration.png') }}" alt="">
-        </div>
+    <div class="auth-wrapper">
+        <div class="auth-box">
 
-        <div class="right">
-            <div class="logo">
-                <img src="{{ asset('storage/images/logo.jpg') }}">
+            <div class="auth-logo">
+                <img src="{{ asset('storage/images/logo.jpg') }}" alt="Rasa Nusantara">
             </div>
 
-            <h2>Daftar atau Masuk</h2>
+            <div class="auth-title">Daftar atau Masuk</div>
 
-            <a href="{{ route('google.redirect') }}" class="btn">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+            {{-- GOOGLE --}}
+            <a href="{{ route('google.redirect') }}" class="auth-btn">
+                <span class="btn-icon">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                </span>
                 Lanjutkan Dengan Google
             </a>
 
-            <a href="{{ route('register.email') }}" class="btn">
-                <img src="https://www.svgrepo.com/show/532537/mail.svg">
+            {{-- EMAIL (pakai SVG inline, tidak pakai img lagi) --}}
+            <a href="{{ route('register.email') }}" class="auth-btn">
+                <span class="btn-icon btn-icon-email">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="14" rx="2" ry="2"
+                              stroke="#B3261E" stroke-width="1.8"/>
+                        <path d="M4 7L12 12.5L20 7"
+                              stroke="#B3261E" stroke-width="1.8"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
                 Lanjutkan Dengan Email
             </a>
+
         </div>
     </div>
 
