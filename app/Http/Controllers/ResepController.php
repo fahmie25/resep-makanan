@@ -58,7 +58,7 @@ class ResepController extends Controller
             });
         } else {
             // kalau tidak search → batasi 6 resep saja
-            $query->limit(6);
+            $query->limit(5);
         }
 
         $reseps = $query->orderBy('id', 'asc')->get();

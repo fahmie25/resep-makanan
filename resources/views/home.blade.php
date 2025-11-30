@@ -179,16 +179,73 @@
         }
 
         /* Background foto besar bawah */
-        .footer-illustration {
-            width: 100%;
-            height: 1000px;           /* tinggi area gambar */
-            margin-top: -20px;     /* jarak dari card */
-            background-repeat: no-repeat;
-            background-position: center -500px;
-            background-size: contain;
-            opacity: 0.35;           /* lembut */
-            pointer-events: none;    /* tidak bisa diklik */
-        }
+     
+
+        
+        /* ==== CARD RESEP — ANIMASI HOVER ==== */
+
+        /* ==== CARD RESEP — ANIMASI HOVER SIMPLE ELEGAN ==== */
+
+    .card {
+        width: 200px;
+        background-color: #EBCFD0;
+        border-radius: 24px;
+        padding: 12px;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .card:hover {
+        transform: translateY(-12px); /* hanya naik */
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    /* Foto tetap normal (tanpa zoom) */
+    .card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 15px;
+        transition: opacity 0.25s ease;
+    }
+
+    /* Sedikit efek halus pada hover */
+    .card:hover img {
+        opacity: 0.92; /* sedikit redup agar elegan */
+    }
+
+    /* Judul */
+    .card-title {
+        font-family: 'Playfair Display', serif;
+        margin-top: 10px;
+        font-size: 20px;
+        transition: color 0.2s ease;
+    }
+
+    .card:hover .card-title {
+        color: #8d1e18;
+    }
+
+    /* Fade-in muncul dari bawah */
+    .recipes .card {
+        opacity: 0;
+        animation: fadeUp 0.6s ease forwards;
+    }
+
+    .recipes .card:nth-child(1) { animation-delay: 0.1s; }
+    .recipes .card:nth-child(2) { animation-delay: 0.2s; }
+    .recipes .card:nth-child(3) { animation-delay: 0.3s; }
+    .recipes .card:nth-child(4) { animation-delay: 0.4s; }
+    .recipes .card:nth-child(5) { animation-delay: 0.5s; }
+    .recipes .card:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes fadeUp {
+        0%   { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
 
     </style>
 </head>
