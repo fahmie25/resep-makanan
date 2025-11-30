@@ -171,7 +171,7 @@
     <!-- KANAN FORM -->
     <div class="right">
 
-        <a href="{{ route('register.choice') }}" class="back-btn">← Kembali</a>
+        <a href="{{ route('home') }}" class="back-btn">← Kembali</a>
 
         <div class="login-box">
 
