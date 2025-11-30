@@ -244,18 +244,27 @@
 </header>
 
 {{-- FORM SEARCH --}}
-<div class="search-container">
-    <input type="text" placeholder="Cari Resep Disini">
-    
-    <button class="search-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="8" cy="8" r="6"></circle>
-            <line x1="13" y1="13" x2="17" y2="17"></line>
-        </svg>
-    </button>
-</div> 
+<div class="search-wrapper" style="width:100%; margin:0 auto;">
+    <form action="{{ route('home') }}" method="GET">
+        <div class="search-container">
+            <input
+                type="text"
+                name="q"
+                placeholder="Cari Resep Disini"
+                value="{{ $search ?? '' }}"
+            >
 
-<!-- garis bawah -->
+            <button type="submit" class="search-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+    </form>
+
+    {{-- garis merah di bawah search --}}
     <div class="search-line"></div>
 </div>
 
