@@ -79,37 +79,47 @@
 
         /* ========== SEARCH ========== */
 
-        .search-wrapper {
-            width: 65%;
-            margin: 10px auto 20px auto;
-        }
-
-        .search-box {
-            width: 100%;
+        .search-container {
             display: flex;
             align-items: center;
-            padding: 10px 18px;
-            border-radius: 999px;
-            border: 2px solid #B3261E;
-            background-color: #EDE6DD;
-            font-size: 18px;
-        }
-
-        .search-icon { margin-right: 10px; }
-
-        .search-input {
-            border: none;
-            outline: none;
             width: 100%;
+            max-width: 850px;
+            margin: 24px auto;
+            background: #EFE8DF;
+            border: 2px solid #B3261E;
+            padding: 10px 16px;
+            border-radius: 999px;
+            position: relative;
+        }
+
+        .search-container input {
+            flex: 1;
+            border: none;
             background: transparent;
-            font-size: 18px;
+            font-size: 16px;
+            outline: none;
+            font-family: 'Nunito', sans-serif;
         }
 
-        .divider {
-            border-top: 3px solid #000;
-            margin: 8px 0 0 0;
+        .search-btn {
+            background: #B3261E;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
         }
 
+        .search-btn:hover {
+            background: #8d1e18;
+        }
+
+        .search-btn svg {
+            display: block;
+        }
         /* ========== RESEP POPULER ========== */
 
         .section-title {
@@ -150,6 +160,13 @@
             font-size: 20px;
         }
 
+        .search-line {
+            margin-top: 6px;
+            width: 100%;
+            height: 3px;
+            background-color: #B3261E;
+        }
+
         /* Tombol favorit posisi pojok */
         .fav-btn {
             position: absolute;
@@ -160,6 +177,19 @@
             border: none;
             cursor: pointer;
         }
+
+        /* Background foto besar bawah */
+        .footer-illustration {
+            width: 100%;
+            height: 1000px;           /* tinggi area gambar */
+            margin-top: -20px;     /* jarak dari card */
+            background-repeat: no-repeat;
+            background-position: center -500px;
+            background-size: contain;
+            opacity: 0.35;           /* lembut */
+            pointer-events: none;    /* tidak bisa diklik */
+        }
+
     </style>
 </head>
 
@@ -214,20 +244,29 @@
 </header>
 
 {{-- FORM SEARCH --}}
-<div class="search-wrapper">
-    <form class="search-box" action="{{ route('home') }}" method="GET">
-        <span class="search-icon">🔍</span>
-        <input
-            class="search-input"
-            type="text"
-            name="q"
-            placeholder="Cari Resep Disini"
-            value="{{ $search ?? '' }}">
-    </form>
-    <div class="divider"></div>
+<div class="search-container">
+    <input type="text" placeholder="Cari Resep Disini">
+    
+    <button class="search-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="6"></circle>
+            <line x1="13" y1="13" x2="17" y2="17"></line>
+        </svg>
+    </button>
+</div> 
+
+<!-- garis bawah -->
+    <div class="search-line"></div>
 </div>
 
-<h2 class="section-title">Resep Populer</h2>
+<h2 class="section-title">
+    @if(!empty($search))
+        Hasil untuk "{{ $search }}"
+        {{-- kalau mau persis sama dengan yang diketik tanpa tambahan kata, pakai:  {{ $search }} --}}
+    @else
+        Resep Populer
+    @endif
+</h2>
 
 <div class="recipes">
 
@@ -249,6 +288,10 @@
 
     @endforeach
 
+</div>
+
+<div class="footer-illustration"
+     style="background-image: url('{{ asset('storage/images/fotobanyakan.jpg') }}');">
 </div>
 
 </body>

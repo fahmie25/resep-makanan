@@ -90,6 +90,25 @@
             margin-top: 40px;
             font-size: 18px;
         }
+
+        .back-btn {
+        position: absolute;
+        top: 28px;
+        right: 28px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background-color: #ffffff;
+        border: 1px solid #f0d9c7;
+        color: #B3261E;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+    .back-btn:hover {
+        background-color: #fbeee5;
+    }
+
     </style>
 </head>
 <body>
@@ -104,7 +123,7 @@
         Resep Favorit Saya
     </div>
 
-    <a href="{{ route('home') }}" class="back-link">← Kembali</a>
+   <a href="javascript:history.back()" class="back-btn">← Kembali</a>
 </header>
 
 @if($reseps->isEmpty())

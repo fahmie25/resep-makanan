@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Resep;   
+use App\Models\Resep; 
 
 class ResepController extends Controller
 {
@@ -43,49 +43,56 @@ class ResepController extends Controller
         //
     }
 
-   public function home(Request $request)
+    // ================= HOME =================
+    public function home(Request $request)
     {
-    $search = $request->input('q');
+        $search = $request->query('q');
 
-    $reseps = Resep::query()
-        ->when($search, fn($q) =>
-            $q->where('nama', 'like', "%$search%")
-              ->orWhere('kategori', 'like', "%$search%")
-        )
-        ->get();
+        $query = Resep::query();
 
-    return view('home', [
-        'reseps' => $reseps,
-        'search' => $search,
-    ]);
+        if ($search) {
+            // kalau user lagi search → tampilkan semua hasil yang cocok
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('kategori', 'like', "%{$search}%");
+            });
+        } else {
+            // kalau tidak search → batasi 6 resep saja
+            $query->limit(6);
+        }
+
+        $reseps = $query->orderBy('id', 'asc')->get();
+
+        return view('home', [
+            'reseps' => $reseps,
+            'search' => $search,
+        ]);
     }
 
     public function createUser()
     {
-    return view('upload-resep');
+        return view('upload-resep');
     }
 
     public function storeUser(Request $request)
     {
-    $request->validate([
-        'nama'       => 'required|string|max:255',
-        'bahan'      => 'required|string',
-        'cara_masak' => 'required|string',
-        'gambar'     => 'required|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+        $request->validate([
+            'nama'       => 'required|string|max:255',
+            'bahan'      => 'required|string',
+            'cara_masak' => 'required|string',
+            'gambar'     => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    // upload gambar ke storage
-    $gambarPath = $request->file('gambar')->store('images', 'public');
+        $gambarPath = $request->file('gambar')->store('images', 'public');
 
-    // simpan ke database
-    Resep::create([
-        'nama'       => $request->nama,
-        'bahan'      => $request->bahan,
-        'cara_masak' => $request->cara_masak,
-        'gambar'     => $gambarPath,
-        'user_id'    => auth()->id(), // simpan siapa yang upload
-    ]);
+        Resep::create([
+            'nama'       => $request->nama,
+            'bahan'      => $request->bahan,
+            'cara_masak' => $request->cara_masak,
+            'gambar'     => $gambarPath,
+            'user_id'    => auth()->id(),
+        ]);
 
-    return redirect()->route('home')->with('success', 'Resep berhasil diupload!');
+        return redirect()->route('home')->with('success', 'Resep berhasil diupload!');
     }
 }
