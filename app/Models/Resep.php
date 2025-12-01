@@ -17,13 +17,14 @@ class Resep extends Model
         'cara_masak',
     ];
 
-    // Relasi ke favorite
+    // Setiap resep punya banyak baris di tabel favorites
     public function favorites()
     {
         return $this->hasMany(Favorite::class, 'resep_id');
+        // ini yang dipakai oleh withCount('favorites')
     }
 
-    // Siapa saja user yang mem-favorite resep ini (kalau mau dipakai di tempat lain)
+    // Siapa saja user yang mem-favorite resep ini
     public function favoritedBy()
     {
         return $this->belongsToMany(User::class, 'favorites', 'resep_id', 'user_id');

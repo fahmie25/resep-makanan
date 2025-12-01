@@ -12,12 +12,14 @@ class FavoriteStatsController extends Controller
         // Ambil 12 menu paling banyak difavoritkan
         $topMenus = Resep::withCount('favorites')
             ->orderBy('favorites_count', 'desc')
-            ->take(12)
+            ->take(5)
             ->get();
 
+        // Label dan data untuk Chart.js
         $labels = $topMenus->pluck('nama');
         $data   = $topMenus->pluck('favorites_count');
 
+        // Ringkasan
         $totalFav = $topMenus->sum('favorites_count');
         $mostFav  = $topMenus->first();
 
