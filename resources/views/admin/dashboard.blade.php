@@ -173,6 +173,7 @@
             padding: 18px !important;
         }
     }
+
 </style>
 
 <div class="d-flex justify-content-center w-100 py-4">
@@ -215,6 +216,7 @@
                     </div>
                 </div>
             </div>
+
 
             {{-- Tabel --}}
             <div class="table-responsive mb-3">

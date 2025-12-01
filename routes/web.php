@@ -5,6 +5,7 @@ use App\Http\Controllers\ResepController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\ResepAdminController;
+use App\Http\Controllers\Admin\FavoriteStatsController;
 // use App\Http\Controllers\UserUploadController;
 
 /*
@@ -115,3 +116,7 @@ Route::middleware('auth')->group(function () {
 
     });
 
+// Statistik favorit resep (admin only)
+Route::get('/admin/favorite-stats', [FavoriteStatsController::class, 'index'])
+    ->name('admin.favorite.stats')
+    ->middleware('auth');

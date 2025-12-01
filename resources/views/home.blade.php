@@ -120,6 +120,7 @@
         .search-btn svg {
             display: block;
         }
+
         /* ========== RESEP POPULER ========== */
 
         .section-title {
@@ -178,74 +179,64 @@
             cursor: pointer;
         }
 
-        /* Background foto besar bawah */
-     
-
-        
-        /* ==== CARD RESEP — ANIMASI HOVER ==== */
-
         /* ==== CARD RESEP — ANIMASI HOVER SIMPLE ELEGAN ==== */
 
-    .card {
-        width: 200px;
-        background-color: #EBCFD0;
-        border-radius: 24px;
-        padding: 12px;
-        text-align: center;
-        position: relative;
-        cursor: pointer;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+        .card {
+            width: 200px;
+            background-color: #EBCFD0;
+            border-radius: 24px;
+            padding: 12px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-    .card:hover {
-        transform: translateY(-12px); /* hanya naik */
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
-    }
+        .card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+        }
 
-    /* Foto tetap normal (tanpa zoom) */
-    .card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 15px;
-        transition: opacity 0.25s ease;
-    }
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: opacity 0.25s ease;
+        }
 
-    /* Sedikit efek halus pada hover */
-    .card:hover img {
-        opacity: 0.92; /* sedikit redup agar elegan */
-    }
+        .card:hover img {
+            opacity: 0.92;
+        }
 
-    /* Judul */
-    .card-title {
-        font-family: 'Playfair Display', serif;
-        margin-top: 10px;
-        font-size: 20px;
-        transition: color 0.2s ease;
-    }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            margin-top: 10px;
+            font-size: 20px;
+            transition: color 0.2s ease;
+        }
 
-    .card:hover .card-title {
-        color: #8d1e18;
-    }
+        .card:hover .card-title {
+            color: #8d1e18;
+        }
 
-    /* Fade-in muncul dari bawah */
-    .recipes .card {
-        opacity: 0;
-        animation: fadeUp 0.6s ease forwards;
-    }
+        .recipes .card {
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
 
-    .recipes .card:nth-child(1) { animation-delay: 0.1s; }
-    .recipes .card:nth-child(2) { animation-delay: 0.2s; }
-    .recipes .card:nth-child(3) { animation-delay: 0.3s; }
-    .recipes .card:nth-child(4) { animation-delay: 0.4s; }
-    .recipes .card:nth-child(5) { animation-delay: 0.5s; }
-    .recipes .card:nth-child(6) { animation-delay: 0.6s; }
+        .recipes .card:nth-child(1) { animation-delay: 0.1s; }
+        .recipes .card:nth-child(2) { animation-delay: 0.2s; }
+        .recipes .card:nth-child(3) { animation-delay: 0.3s; }
+        .recipes .card:nth-child(4) { animation-delay: 0.4s; }
+        .recipes .card:nth-child(5) { animation-delay: 0.5s; }
+        .recipes .card:nth-child(6) { animation-delay: 0.6s; }
 
-    @keyframes fadeUp {
-        0%   { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
-    }
+        @keyframes fadeUp {
+            0%   { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
     </style>
 </head>
@@ -264,39 +255,53 @@
     </div>
 
     <div class="actions">
-
+        {{-- Favorite --}}
         <a href="{{ route('favorites.index') }}" class="nav-link">
-            ⭐ <span>Favorite</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#B3261E"
+                 stroke="#B3261E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.1 6.6L12 17.8l-5.8 3.1 1.1-6.6-4.8-4.7 6.6-.9L12 2.5z"/>
+            </svg>
+            <span>Favorite</span>
         </a>
 
+        {{-- Upload (user login) --}}
         @auth
-    <a href="{{ route('upload.resep') }}" class="nav-link">
-        ⬆ <span>Upload</span>
-    </a>
-    @endauth
+            <a href="{{ route('upload.resep') }}" class="nav-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 19V5" />
+                    <polyline points="5 12 12 5 19 12" />
+                </svg>
+                <span>Upload</span>
+            </a>
+        @endauth
 
-    @guest
-    <a href="{{ route('login') }}" class="nav-link">
-        ⬆ <span>Upload</span>
-    </a>
-    @endguest
-
+        {{-- Upload (belum login -> diarahkan ke login) --}}
+        @guest
+            <a href="{{ route('login') }}" class="nav-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 19V5" />
+                    <polyline points="5 12 12 5 19 12" />
+                </svg>
+                <span>Upload</span>
+            </a>
+        @endguest
 
         @guest
             <a href="{{ route('login') }}" class="btn-login">Login ⇗</a>
         @endguest
 
         @auth
-        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-            @csrf
-            <button type="submit"
-                class="btn-login"
-                style="background:#B3261E; color:white; border:1px solid #000;">
-                Logout ⇘
-            </button>
-        </form>
-    @endauth
-
+            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit"
+                        class="btn-login"
+                        style="background:#B3261E; color:white; border:1px solid #000;">
+                    Logout ⇘
+                </button>
+            </form>
+        @endauth
     </div>
 </header>
 
@@ -310,12 +315,11 @@
                 placeholder="Cari Resep Disini"
                 value="{{ $search ?? '' }}"
             >
-
             <button type="submit" class="search-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                     stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
         </div>
@@ -328,32 +332,22 @@
 <h2 class="section-title">
     @if(!empty($search))
         Hasil untuk "{{ $search }}"
-        {{-- kalau mau persis sama dengan yang diketik tanpa tambahan kata, pakai:  {{ $search }} --}}
     @else
         Resep Populer
     @endif
 </h2>
 
 <div class="recipes">
-
     {{-- LOOP DINAMIS DARI DATABASE --}}
     @foreach($reseps as $resep)
-
         <div class="card">
-
-            <!-- {{-- Tombol Favorit ⭐ --}}
-            <x-favorite-star :resep="$resep" class="fav-btn" /> -->
-
             {{-- Klik gambar menuju detail --}}
             <a href="{{ route('resep.show', $resep->id) }}" style="text-decoration:none; color:inherit;">
                 <img src="{{ asset('storage/' . $resep->gambar) }}" alt="{{ $resep->nama }}">
                 <div class="card-title">{{ $resep->nama }}</div>
             </a>
-
         </div>
-
     @endforeach
-
 </div>
 
 <div class="footer-illustration"

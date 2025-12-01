@@ -9,6 +9,7 @@
 
     <style>
         * { box-sizing: border-box; }
+
         body {
             margin: 0;
             font-family: 'Nunito', sans-serif;
@@ -28,7 +29,9 @@
             gap: 10px;
         }
 
-        .logo img { width: 60px; }
+        .logo img {
+            width: 60px;
+        }
 
         .brand-text {
             font-family: 'Playfair Display', serif;
@@ -74,8 +77,45 @@
     </div>
 
     <div class="actions">
-        <a href="{{ route('home') }}" class="nav-link">🏠 Home</a>
-        <a href="{{ route('favorites.index') }}" class="nav-link">⭐ Favorite</a>
+        {{-- HOME --}}
+        <a href="{{ route('home') }}" class="nav-link">
+            <svg width="18" height="18" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9.5L9 3l6 6.5M4 8.5V15h4v-3h2v3h4V8.5" />
+            </svg>
+            Home
+        </a>
+
+        {{-- TOMBOL GRAFIK FAVORITE / KEMBALI --}}
+        @if(request()->is('admin*'))
+            @if(request()->is('admin/favorite-stats'))
+                {{-- KEMBALI --}}
+                <a href="{{ route('admin.resep.index') }}" class="nav-link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                        <line x1="9" y1="12" x2="21" y2="12" />
+                    </svg>
+                    Kembali
+                </a>
+            @else
+                {{-- GRAFIK FAVORITE --}}
+                <a href="{{ route('admin.favorite.stats') }}" class="nav-link">
+                    <svg width="18" height="18" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 14 10 8 14 12 20 4" />
+                    </svg>
+                    Grafik Favorite
+                </a>
+            @endif
+        @endif
+
+        {{-- FAVORITE --}}
+        <a href="{{ route('favorites.index') }}" class="nav-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#B3261E"
+                 stroke="#B3261E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.1 6.6L12 17.8l-5.8 3.1 1.1-6.6-4.8-4.7 6.6-.9L12 2.5z"/>
+            </svg>
+            Favorite
+        </a>
 
         @guest
             <a href="{{ route('login') }}" class="btn-login">Login ⇗</a>
@@ -84,8 +124,7 @@
         @auth
             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                 @csrf
-                <button type="submit" class="btn-login"
-                    style="background:#B3261E; color:white;">
+                <button type="submit" class="btn-login" style="background:#B3261E; color:white;">
                     Logout ⇘
                 </button>
             </form>

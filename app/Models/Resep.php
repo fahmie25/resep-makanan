@@ -20,13 +20,12 @@ class Resep extends Model
     // Relasi ke favorite
     public function favorites()
     {
-    return $this->belongsToMany(Resep::class, 'favorites', 'user_id', 'resep_id');
+        return $this->hasMany(Favorite::class, 'resep_id');
     }
 
-
+    // Siapa saja user yang mem-favorite resep ini (kalau mau dipakai di tempat lain)
     public function favoritedBy()
     {
-    return $this->belongsToMany(User::class, 'favorites', 'resep_id', 'user_id');
+        return $this->belongsToMany(User::class, 'favorites', 'resep_id', 'user_id');
     }
-
 }
