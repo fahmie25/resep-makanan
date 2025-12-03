@@ -44,29 +44,28 @@ class ResepController extends Controller
     }
 
     // ================= HOME =================
-    public function home(Request $request)
+   public function home(Request $request)
     {
-        $search = $request->query('q');
+    $search = $request->query('q');
 
-        $query = Resep::query();
+    if ($search) {
+        // Jika sedang search → tampilkan hasil search
+        $reseps = Resep::where('nama', 'like', "%{$search}%")
+                        ->orWhere('kategori', 'like', "%{$search}%")
+                        ->orderBy('id', 'asc')
+                        ->get();
+    } else {
+        // Jika tidak search → tampilkan resep populer berdasarkan favorit terbanyak
+        $reseps = Resep::withCount('favorites')
+                        ->orderBy('favorites_count', 'DESC')
+                        ->take(5)
+                        ->get();
+    }
 
-        if ($search) {
-            // kalau user lagi search → tampilkan semua hasil yang cocok
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('kategori', 'like', "%{$search}%");
-            });
-        } else {
-            // kalau tidak search → batasi 6 resep saja
-            $query->limit(5);
-        }
-
-        $reseps = $query->orderBy('id', 'asc')->get();
-
-        return view('home', [
-            'reseps' => $reseps,
-            'search' => $search,
-        ]);
+    return view('home', [
+        'reseps' => $reseps,
+        'search' => $search,
+    ]);
     }
 
     public function createUser()
